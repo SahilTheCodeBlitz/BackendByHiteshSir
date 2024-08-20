@@ -1,0 +1,107 @@
+let see the entire template of professional project setup for backend
+
+step 1 = npm init
+
+step 2 = add readme.md
+
+step 3 = create a public folder and inside a public folder create temp 
+        folder
+
+        though we store images or video files on third party cloud
+        platfrom but still we need to store a temporary copy of
+        those at server this folder is for the same
+
+        we cannot push empty folder to github so just create
+        .gitkeep file inside temp it is empty file
+
+step 4 = create the gitignore file in the root directory
+      
+        One can use the gitigone generaator to generate this
+        fle automatically
+
+step 5 = Create .env file       
+
+step 6 = Create a src folder where actual coding will be done
+
+        This help in managing the code files well
+
+step 7 = Create  three files in src folder
+         index.js,constants.js, app.js
+
+step 8 = Edit the package.json file
+
+         8.1 ] add type = 'module'
+         8.2 ] change the script section add new script for running
+                
+                "dev" :"nodemon src/index.js"
+
+                to run  = npm run dev
+
+step 9 = Create important folders in src
+
+        1] controllers = function having logic for route handling
+        2] db = database connection logic
+        3] middlewares = function logic before serving request
+        4] models = database model structures
+        5] routes = have all the routes
+        6] utils = utilities means write those function where you 
+                    need that function at many places
+
+
+
+
+step 9 = Install nodemon 
+          npm i -D nodemon // this is used only for development   
+
+          nodemon will be added to dev dependency                       
+
+
+step 10 = install prettier 
+
+          prettier make sures ki agar ek project 4 jan milke bana 
+          rhe hai to uniformity ho code me sab same standard 
+          follow kare if suppose someone uses ; and some not it
+          may cause conflict to resolve this we define rules
+          to follow uniformity
+
+
+
+          step 10.1 ] npm i -D prettier // prettier is dev dependency
+
+          step 10.2 ] create a file .prettierrc in root directory 
+
+                      then specifies rules here like
+
+                      {
+                        "singleQuote": false,
+                        "bracketSpacing": true,
+                        "tabWidth": 2,
+                        "semi": true,
+                        "trailingComma": "es5"
+                      }
+
+         step 10.3] create a .prettierignore file in root directory
+
+                    Here you specify those files where you want 
+                    preetier rules should not be applied 
+                    because if applied to .env it would just change its 
+                    format
+
+                    /.vscode
+                    /node_modules
+                    ./dist
+
+                    *.env
+                    .env
+                    .env.*
+
+                    // iske bhi file generator milta hai
+
+step 11 ] git pe upload  karo ji 
+
+
+
+
+
+
+                                    

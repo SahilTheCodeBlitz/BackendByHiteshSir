@@ -1,0 +1,16 @@
+{
+  "name": "04professionalprojectsetup",
+  "version": "1.0.0",
+  "description": "Proffesional project setup template",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon src/index.js"
+  },
+  "author": "Sahil Khane",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.4",
+    "prettier": "^3.3.3"
+  }
+}

@@ -1,0 +1,28 @@
+One good practice is whwnever you get any task to store data and all
+say login details before starting the coding try to understand requirements
+required fields and then start  clearly understand what we have to store
+
+
+DATA MODELING =  data modeling means data ka pura structure define karna 
+
+lets see approach in industry for backend project
+
+
+very firstly we have to see the requirement what are fields that  we 
+have to store in database what are features requirements
+
+then by using model drawing tool we can graphically design the 
+layput to understand what are data field and how components are related to 
+each other
+
+then we create a model in database using monggose i.e create the sructure 
+of the database and specifies all the important fileds needed
+
+we are going to create three database models for our understading
+
+model 1 = todos model
+
+
+
+
+

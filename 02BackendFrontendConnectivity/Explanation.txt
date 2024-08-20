@@ -1,0 +1,63 @@
+Working on the backend frontend connectivity
+
+sending data from backend that is from backend to frontend 
+and displaying jokes data at front end using react framework
+
+if you write this code in frontend
+
+useEffect(()=>{
+
+    axios.get('http:localhost:4000/api/jokes').then((response)=>{
+
+      // success code
+
+      setJokes(response.data) // setting the jokes data
+
+
+    }).catch((error)=>{
+
+      console.log(error);
+
+    })
+
+    the biggest problem will be cors i.e cross origin resource sharing error
+    that will block the request comming from different origin
+
+    agar apka url alag hai , port number alag hai use cross origin kha
+    jata hai
+
+
+    number of way s to tackle this
+
+    1] Whitelisting
+
+        you ask the backend developers to whitelist the url of front end
+        so that your front end request can be served by the server
+
+        Problem = the url say http://localhost:5173/ is front end url
+        if you white list it but the url will be changed on production server 
+        this will cause the issue so bad idea
+
+        Solution = PRoduction pe dalne ke bad ye sab change karo Whitelisting
+        parameters
+
+    2] using cors
+
+        do whotelisting or add headers options at backend but still same 
+        problem
+
+    3] Better Solution Using Proxy server 
+
+    Add the proxy setting in vite.config.js and then to resolve same problem 
+    now we will chane the localhost address with the server address
+    at production
+
+    proxy:{
+      '/api': {
+        target: 'http://localhost:4000',
+        changeOrigin: true, // This ensures the request is seen as originating from the target server.
+        
+      },
+
+    Note = deploy backend and front end server separetly       
+

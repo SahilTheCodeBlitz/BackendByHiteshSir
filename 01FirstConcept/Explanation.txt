@@ -1,0 +1,10 @@
+Just creating  normal server that will listen at port which
+is specified in dot env  because it is needed for deploying server
+at production , where dot env file me jo port hai vo exchnage
+hoga server ke port number se
+
+Two packages express and dotenv used
+
+basics we already know it
+
+We can deploy it as it is on any cloud but not able to because of charges

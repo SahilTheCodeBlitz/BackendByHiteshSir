@@ -1,0 +1,361 @@
+Tut 5 = Connection with mongodb 
+
+STEPS on mongodb cloud
+
+step1 = create new project (Project Name = ChaiAurCode)
+step2 = create the cluster 
+step3 = get user name and paswwrod ans save it in .env
+step4 = create user
+step5 = copy the connection string and paste in .env
+step6 = remove / from the string
+step7 = give ip address access
+step8 = in constant.js write database name
+
+setup complete knnow we have allthe credentials
+
+ 
+
+There are two ways  to connect with mongodb
+
+1] Way is to write code in index.js to connect 
+2] write connection code in db folder and then export it in index.js
+
+second approach widely used but we will see both
+
+approach 1  = 
+
+it is necessary to establish the connection with database firstly
+before any task so writitn the connection logic in iffe fucniton
+
+(()=>{//logic})()
+
+database is always present at another continent so we have to 
+use async await as time will be taken to establish the connection
+with database
+
+always write connection code in try catch block because very high
+chances error will come while connection
+
+this is the connection string
+mongoose.connect(`${process.env.MONGOCONNECTIONURI}/${DBNAME}`)
+
+DBNAME we have stroed in the constant.js
+
+approach2 = 
+
+Lets make a file in DB FOLDER there we will write function for connection
+and willl import it in index.js
+
+also code for express package likke listen , routes we will write it in
+app.js and will import it to index.js
+
+step 1 = create connection.js file in db folder and write code there
+         for mongoose connection 
+
+         and then in index.js file just import dontenv and in async await 
+         call the function 
+
+         job done
+
+
+
+
+
+
+
+Tutorial = Custom API response and error handling
+
+
+
+
+
+
+
+First create app using express in app.js and export it to index.js
+then app.listen if mongodb connection successfull
+
+next thing we are doing is using different inbuilt middlewares to 
+handle different request 
+
+CORS middlewares 
+
+   We are using cors middlewares , cors middleware are used to handle
+   cross origin resource sharing policies 
+   We can have several option here main aim is to decide which another
+   origin request to be allowed 
+   can refer documentation for further processes
+
+app.use(cors({
+    origin:process.env.CORSORIGIN,// specified in the dotenv which origi to allow
+}))
+
+
+
+// middleware to handle the json data also setting the limit i.e size 
+// of the json data
+
+// parses the json data coming from request.body
+
+app.use(express.json({limit:"16kb"}))
+
+
+// middleware to handle the request data which is in the form of the url
+
+app.use(express.urlencoded({limit:"16kb",extended:true}))
+
+// this is middleware function that serves static files such as images, CSS files, 
+//JavaScript files, and other assets from a specified directory.
+// This is useful for web applications that need to deliver these 
+// assets directly to the client's browser.
+
+app.use(express.static('public'))
+
+// cookie parser middleware allow to store cookie at client side
+// or manipulate cookie from server
+
+app.use(cookieParser())
+
+
+Explanation about middleware
+
+
+
+
+
+
+Creating utility functions to handle api error and api response 
+i.e error we get and response we send to client
+
+isse ak standard format jo hum define karenge usi format me error  ki
+information ayegi and same goes for the response
+
+
+creating utility function for the error handling
+
+step 1= go to node api error package link = https://nodejs.org/api/errors.html#class-error
+
+we want to use this Error class to create the error and use 
+the  information given by this class to understand more about
+error and create a general structure of what the error will define
+
+step 2 = utils me apiError.js name ki file create karo
+
+then we are extending the Error class so we can get more information
+about error and use Erro class benefits to create the structured error
+for all the errors that we are going to encounter 
+
+created the constructor there we accepted parameters and using 'this'
+keyword stored that varaible as the class variable 
+
+using super keyword we called the parent class that is  Error class
+constructor we need to pass the message there now what it
+does is it gives info about stack of the error and we can store
+this stack as a variable belongingn to apiError class
+
+After when we call the Erro class so whatever variables are 
+set we will get a object of all this information as the output
+
+
+
+Creating utility function for apiResponse
+
+just creating contructor  that will accept the fields which has
+to be specifiedd while creatinf the object of the class and 
+as a result we will get strucutred object of how the response will look 
+likke
+
+
+
+
+
+
+
+
+
+Tutorial = User and Video model with hooks and jwt and bcrypt
+
+
+So firstly lets make the User and Video model
+
+Go in model folder and create user.model.js and video.model.js
+
+user.model.js
+
+we xreated a model defining various fileds but there are few fields
+that we should look up to first one is watchedHistory this is field 
+where we are taking array of the Video object and this is 
+that one field that gonna make the project more complex
+
+video.model.js
+
+created a model to have a schema in mongodb normal fields
+
+
+watchedHistory special field handling
+
+Actually we require the another package that we will use as plugin
+mongoose-aggregate-paginate-v2
+
+this package allows us to write the aggregation  query
+i.e we can say complex query see docs = aggregation pipeline in mongodb
+
+Best explanation why we need this package
+Mongoose-paginate-v2 is a plugin for Mongoose, a popular Node.js
+ library that helps you work with MongoDB databases. If your project
+  involves displaying a large set of data (like a list of users, posts
+  , or products), showing all the data at once can be overwhelming and
+   slow down your application. Instead, you might want to show the
+    data in smaller, more manageable chunks, or "pages."
+
+Mongoose-paginate-v2 makes it easy to add pagination to your data
+ queries. It allows you to retrieve only a specific number of records
+  at a time (like the first 10, then the next 10, and so on),
+   and gives you tools to navigate between these pages.
+    This way, your users can view the data one page at a time, 
+    making the experience smoother and more user-friendly.
+
+hum array of video dikhayage paginate will make sure ki sare video na load
+ho bas jo chchiye ya recent;y vo hi ho      
+
+
+
+npm install mongoose-aggregate-paginate-v2 
+
+in video.model.js
+
+then import it
+
+and then schamaname.plugin(mongooseGrregateplugin)
+
+
+
+lets come to user.model.js
+
+lets come to password field we cannot directly store password
+as it is  we need to encrypt it and store also need to compare
+the encrypted password so for that puppse we need to use bcrypt
+
+another thing that we require is jsonwebtoken
+
+ok now we have to hash the password to do so what we gonna do is
+we want to implement password hash method just before model is saved todo 
+so we require the hook called pre and in that 'save' as the event list
+ener and inside that whaterver code we write it will be executed before 
+svinf the data to database
+
+in pre hook dont use callback function as we will have no access to 
+schema data as callback has no access to this keyword
+
+injectiing methods in schema
+
+
+uske bad humne input password and database passwrod compare karne 
+ke liye bhi ek method banaya jo humne as a property schema
+me dala let see usko kaise use karenge aage
+
+
+then we created two method which belong to schema to create access 
+token and refresh token using sign method by jwt 
+
+why we require this two tokens ....
+
+
+
+D
+O
+U
+B
+T
+
+
+Tutorial = How to upload file in backend 
+
+Adding file to temporary storage and from that storage to third party
+cloud platform
+Then using cloud url to access the file 
+
+strategy = first we will store the file that we get from front end 
+            to our local server temporary and then from that temporary
+            storage to cloudinary
+
+We have to create the utility function or middleware for file
+upload lets crete the middleware
+
+
+
+First signin to the cloudinary  and see the documenetation
+
+then npm i cloudinary
+     npm i multer
+
+Create cloudinaryFileUpload.js
+
+created the function that take's  filepath and then upload the 
+the file to the cloudinary and unlinks the file from the 
+local temporary storage
+
+
+create a middleware to store the file as a temporary storage in server
+
+check code in middleware folder
+multer.middleware.js
+
+// me isko as a middleware use karunga route me
+// if mujhw laga us route pe file ayegi o i will use this
+// middleware function 
+
+// app.post('/profile', upload.storage('storage'), function (req, res, next) {
+    // req.file is the `avatar` file
+    // req.body will hold the text fields, if there were any
+//   })
+
+
+
+HTTP crash course
+
+
+// letss get starting with actual coding
+
+// just creating a standardised code to avoid wrting try
+catch at every controllers code
+
+creating a asynchronous  function handling utility
+
+steps = got to utility and create asynchandler.js
+        this is the wrapper fucntion which executes error handler
+        middleware as soon as error occurs if no error occurs our controllers
+        function will execute normally
+
+
+lets now create a register route and handle it 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+         
+
+
+
