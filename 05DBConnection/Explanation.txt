@@ -172,6 +172,9 @@ likke
 
 
 
+
+
+
 Tutorial = User and Video model with hooks and jwt and bcrypt
 
 
@@ -330,32 +333,117 @@ steps = got to utility and create asynchandler.js
 lets now create a register route and handle it 
 
 
+registration.controllers code
+
+// for registration we will first make strategy how to 
+    // achieve it and what does we want
+
+    // step 1 ] get user details from frontend but for now postman
+    // step 2 ] validation of the received details
+    // step 3 ] checking whehter user already exist or not: based on 
+    // usernname and email
+    // step 4 ] check for images avatar and for coverImage
+    // step 5 ] upload image to local storage using multer
+    // step 6 ] upload image to cloudinary
+    // step 7 ] create a user object - create entry in db
+    // step 8 ] Remove pass and refresh token field from user object
+    // step 9 ] send response to the client
 
 
 
 
 
+Starting with the part 2 of the backend series
+
+Access token and refresh token
+
+Both access token and refresh token are the same thing generated
+following same logic but the only main difference is that duration
+of expiry the duration of expiry of zcess token is very less say 15 min 
+1 hour etc but the duration of the expiry of the refresh token is 
+long 1 week 1 month depends
+
+The main  purpose of the token is to keep user sign in for a certain
+period of time in order to avoid entering user details again
+and again
+
+Access token allows user to keep  signin but when access token expires
+instead of again entering user details oa specific route is hit
+where using refresh token the access token are generated and then
+by using access token direct login
+
+One thinf to notice is hat refresh token are saved at database also
+
+lets create a login functionality here we will also need to 
+generate tokens and send it to client machine as wF8zELf3dFNl
+
+create a user login route,controllers
+
+so first we will accept the input from the user that is 
+username , password email then will validate this then 
+will find the user from database by considering either username
+or email once user found we will use user objct to call checkPassword method
+add to user.model and pass the input passowrd here user entered
+password and password stored in databade will be checked
+if password corect then we have to generate refresh and ccess token 
+for that we have created the method where we pass userid
+this method finds user then call the model methods for creatinf tokens
+then save refresh token to database and return access and refrsh token
+then once we have token we send userdata as well as this tokens as
+cookie in response to client
+therfore user logged in successfully
+
+
+logout functionality
+
+
+logout objective = remove tokens from cookie
+                   remove refresh token from database
+
+main problem     = unlike login functionality here we dont have access
+                   to user credentials we cannot ask user to enter 
+                   email then logout email isse ki bhi user
+                   kuch bhi email entry karega aur koi bhi logout hoga
+
+
+solution  =      as we have used cookie parser middleware so we have access to 
+                 of  cookie in req simialr to how when we use multer middlewsr
+                 we were having access to files upload in  request that is 
+                 req.files so now we will have access to req.cookie
+                 from where we can get decoded token stored at client
+
+                 then using jwt.verify method we will pass the encrypted token
+                 that we received and another parameter a secret key that encrypted
+                 the token so output of this will be decrypted token
+
+                 from decrypted token we can get info that we used for encryption like
+                 userid from userid we made a database query to find the user 
+
+                 then create a object in req  req.user  = user and then do one thing that is
+                 add the user to req object and call next so next middleware or contoller will
+                 be executed
+
+                 the flow will not go to logoutcontroller here now the req will have access
+                 to  req.user and thus now we will have access to user database and thus can
+                 change refreshToken field to undefined
 
 
 
 
+Access and Refresh Token ki functionality
 
+Suppose app kisi resource ko access karna chahte hai par apka
+access token expire ho gya so definelty ab hume 401 or koi
+error reponse ayega so insread of directing user to again register
+or login , front end developer will write a small code to direct them
+to   a specific route with refresh token passing to method
+yeha is route pe by using refreshtoken recevied from cookie the jwtverfiy
+use karke use decrypt karek id obtain hogi fir mongodb se user
+ko fetch karenge uske bad refreshtoken user ka aur inout me aya hua
+refresh token ko match karenge agar same hoga to again access and 
+refresh token ko generate karenge and user will have access to 
+resources as a ouput success response and cookies me refresh
+as well as access token ko store karenge
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-         
-
-
+ek endpoint bhi banado route me refresh-token nam ka post req
 
