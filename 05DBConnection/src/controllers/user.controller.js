@@ -155,9 +155,11 @@ const generateToken = async (userId) => {
   // store the refresh token to the  database
   // return refreshtoken and accesstoken
 
-  const user = await User.findById({ userId });
+  const user = await User.findById(userId);
 
   // validation if user exist or not
+
+  console.log('t1 user' , user);
 
   if (!user) {
     throw new ApiError(400, "some error while generating tokens");
@@ -168,9 +170,14 @@ const generateToken = async (userId) => {
   const accessToken = await user.generateAccessToken();
   const refreshToken = await user.generateRefreshToken();
 
+  console.log('test 1','accesstoken = ',accessToken);
+  console.log('test 2','refreshtoken = ',refreshToken);
+
+
+
   // validating the tokens
 
-  if (!accessToken || !refreshToken) {
+  if (!accessToken || !refreshToken || accessToken==''||refreshToken=='') {
     throw new ApiError(400, "some error while generating tokens");
   }
 
@@ -189,7 +196,7 @@ const generateToken = async (userId) => {
 
 // login controllers
 
-export const login = asyncHandler(async (req, res) => {
+export const loginUser = asyncHandler(async (req, res) => {
   // plan for doing login
   // take the input from req.body
   // validate the input
@@ -201,7 +208,10 @@ export const login = asyncHandler(async (req, res) => {
   // store the refresh token to database
   // send cookie which have both tokens
 
+  console.log(req.body);
+
   // taking the user input
+
   const { username, email, password } = req.body;
 
   // validate the input
@@ -213,6 +223,7 @@ export const login = asyncHandler(async (req, res) => {
     !password ||
     password == ""
   ) {
+    console.log(username,email,password);
     throw new ApiError(400, "Some of the field is empty");
   }
 
@@ -220,6 +231,7 @@ export const login = asyncHandler(async (req, res) => {
 
   const user = await User.findOne({ $or: [{ username }, { email }] });
 
+  console.log(user);
   if (!user) {
     throw new ApiError(404, "user does not exist");
   }
@@ -245,7 +257,7 @@ export const login = asyncHandler(async (req, res) => {
   // remember user is outdated because e updated the database in
   // geenerate function call
 
-  const loggedUser = await user
+  const loggedUser = await User
     .findById(user._id)
     .select("-password -refreshToken");
 
@@ -273,6 +285,8 @@ export const logout = asyncHandler( async (req,res)=>{
   // we have to delete the refresh token i.e set it undefined
   // ise pehle middleware execute hoga jha req.user object jisp user detail hai vo join hoga
   // delete cookies also
+
+  console.log(req.user);
 
     await User.findByIdAndUpdate(req.user._id,
     {
@@ -305,8 +319,10 @@ export const logout = asyncHandler( async (req,res)=>{
 // as a cookie 
 
 export const refreshBothToken = asyncHandler(async (req,res)=>{
+  
+  console.log('cookies . req',req.cookies);
 
-  const inputRefreshToken = req.cookie.refreshToken ;
+  const inputRefreshToken = req.cookies.refreshToken ;
   
   if(!inputRefreshToken){
     throw new ApiError(402,"Invalid refresh token")    
@@ -315,6 +331,8 @@ export const refreshBothToken = asyncHandler(async (req,res)=>{
   const decodedRefreshToken = jwt.verify(inputRefreshToken,process.env.REFRESHTOKENSECRET)
   
   const userId = decodedRefreshToken._id
+
+  console.log('userid',userId);
 
   const user = await User.findById(userId)
 
@@ -333,8 +351,9 @@ export const refreshBothToken = asyncHandler(async (req,res)=>{
 
   // if everything fine then regenerate access and refresh token
 
-  const {newAccessToken,newRefreshToken} = generateToken(userId)
+  const {accessToken: newAccessToken, refreshToken: newRefreshToken} =await generateToken(userId)
 
+  console.log('new Acees token = ',newAccessToken,'ne refresh token=',newRefreshToken);
 
   const options = {
     httpOnly:true,
@@ -352,3 +371,8 @@ export const refreshBothToken = asyncHandler(async (req,res)=>{
 })
 
 
+
+export const testController =(req,res)=>{
+  console.log(req.body);
+  res.json({message:"Everytinh working fine"})
+}

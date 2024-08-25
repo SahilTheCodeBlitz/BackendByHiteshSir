@@ -15,14 +15,23 @@ app.use(cors({
 // middleware to handle the json data also setting the limit i.e size 
 // of the json data
 
-// parses the json data coming from request.body
 
-app.use(express.json({limit:"16kb"}))
+app.use(express.json({ limit: "16kb" }));
+app.use(express.urlencoded({ limit: "16kb", extended: true }));
+// // parses the json data coming from request.body
+
+// app.use(express.json({limit:"16kb"}))
 
 
-// middleware to handle the request data which is in the form of the url
+// // middleware to handle the request data which is in the form of the url
 
-app.use(express.urlencoded({limit:"16kb",extended:true}))
+// app.use(express.urlencoded({limit:"16kb",extended:true}))
+
+
+// cookie parser middleware allow to store cookie at client side
+// or manipulate cookie from server
+
+app.use(cookieParser())
 
 // this is middleware function that serves static files such as images, CSS files, 
 //JavaScript files, and other assets from a specified directory.
@@ -31,10 +40,7 @@ app.use(express.urlencoded({limit:"16kb",extended:true}))
 
 app.use(express.static('public'))
 
-// cookie parser middleware allow to store cookie at client side
-// or manipulate cookie from server
 
-app.use(cookieParser())
 
 
 
